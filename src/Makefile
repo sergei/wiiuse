@@ -6,6 +6,8 @@
 # Change this to your GCC version.
 #
 CC = gcc
+AR = ar
+PREFIX = /usr/local
 
 ####################################################
 #
@@ -38,7 +40,7 @@ LDFLAGS = -shared -lm -lbluetooth
 # Target binaries (always created as BIN)
 #
 BIN = ./$(OBJ_DIR)/libwiiuse.so
-
+LIB = ./$(OBJ_DIR)/libwiiuse.a
 #
 # Inclusion paths.
 #
@@ -74,12 +76,14 @@ distclean:
 
 install:
 	@if [ -e $(BIN) ]; then \
-		cp -v $(BIN) /usr/lib ; \
+		cp -v $(BIN) $(PREFIX)/lib ; \
+		cp -v $(LIB) $(PREFIX)/lib ; \
 	fi
-	@cp -v wiiuse.h /usr/include
+	@cp -v wiiuse.h $(PREFIX)/include
 
 $(BIN): mkdir $(OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(BIN)
+	$(AR) r $(LIB) $(OBJS) 
 
 $(OBJ_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
